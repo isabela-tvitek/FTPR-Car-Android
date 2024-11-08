@@ -1,5 +1,6 @@
 package com.example.myapitest
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,13 +16,17 @@ import com.example.myapitest.model.ItemLocation
 import com.example.myapitest.model.ItemValue
 import com.example.myapitest.service.RetrofitClient
 import com.example.myapitest.ui.ItemAdapter
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var newCarLauncher: ActivityResultLauncher<Intent>
+    private lateinit var carDetailLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +36,22 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         fetchItems()
 
+
+        newCarLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                fetchItems()
+            }
+        }
+
+        carDetailLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                fetchItems()
+            }
+        }
+
         binding.addCta.setOnClickListener {
-            val intent = Intent(this, NewCarActivity::class.java)
-            startActivity(intent)
+            val intent = NewCarActivity.newIntent(this)
+            newCarLauncher.launch(intent)
         }
     }
 
@@ -48,8 +66,10 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response: List<Map<String, Any>> = RetrofitClient.apiService.getItemsAsMap()
+
                 val items = response.map { itemData ->
                     val itemJson = JSONObject(itemData)
+
                     val imageUrl = itemJson.optString("imageUrl", "https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg")
                     val itemValue = ItemValue(
                         id = itemJson.optString("id"),
@@ -64,13 +84,18 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     )
+
                     Item(
                         id = itemJson.optString("id"),
                         value = itemValue
                     )
                 }
+
                 updateRecyclerView(items)
+                Log.d("MainActivity", "Itens recebidos: $items")
+
             } catch (e: Exception) {
+                Log.e("MainActivity", "Erro ao buscar itens", e)
                 Toast.makeText(this@MainActivity, "Erro ao buscar dados", Toast.LENGTH_SHORT).show()
             } finally {
                 binding.swipeRefreshLayout.isRefreshing = false
@@ -78,57 +103,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private fun fetchItems() {
-//        lifecycleScope.launch {
-//            try {
-//                val items: List<Item> = RetrofitClient.apiService.getItems()
-//                Log.d("MainActivity", "Itens recebidos: $items")
-//                updateRecyclerView(items)
-//            } catch (e: Exception) {
-//                Toast.makeText(this@MainActivity, "Erro ao buscar dados: ${e.message}", Toast.LENGTH_SHORT).show()
-//                e.printStackTrace()
-//            } finally {
-//                binding.swipeRefreshLayout.isRefreshing = false
-//            }
-//        }
-//    }
-
-
-
-    override fun onResume() {
-        super.onResume()
-        fetchItems()
-    }
-
-    private fun updateRecyclerView(items: List<Item>) {
-        val adapter = ItemAdapter(items) { item ->
-            val intent = CarDetailActivity.newIntent(this, item.id)
-            startActivity(intent)
-        }
-        binding.recyclerView.adapter = adapter
-        adapter.notifyDataSetChanged() // Garante atualização
-    }
-
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_logout -> {
-                performLogout()
+                onLogout()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun performLogout() {
+    private fun onLogout() {
         FirebaseAuth.getInstance().signOut()
-        Toast.makeText(this, "Logout bem-sucedido", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, LoginActivity::class.java))
+        val intent = LoginActivity.newIntent(this)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
         finish()
+    }
+
+    private fun updateRecyclerView(items: List<Item>) {
+        val adapter = ItemAdapter(items) { item ->
+            val intent = CarDetailActivity.newIntent(this, item.id)
+            carDetailLauncher.launch(intent)
+        }
+        binding.recyclerView.adapter = adapter
+    }
+
+    companion object {
+        fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 }

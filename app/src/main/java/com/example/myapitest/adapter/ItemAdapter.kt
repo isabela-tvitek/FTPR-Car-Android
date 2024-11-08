@@ -30,9 +30,7 @@ class ItemAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
-        Log.d("ItemAdapter", "Exibindo item: ${item.value.name}")
 
-        // Configure os elementos de UI aqui
         holder.modelTextView.text = item.value.name
         holder.yearTextView.text = item.value.year
         holder.licenseTextView.text = item.value.licence
