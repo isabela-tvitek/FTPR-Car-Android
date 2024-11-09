@@ -3,6 +3,7 @@ package com.example.myapitest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapitest.databinding.ActivityCarDetailBinding
@@ -26,7 +27,7 @@ class CarDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityCarDetailBinding
     private lateinit var item: Item
-    private lateinit var map: GoogleMap
+    private var mMap: GoogleMap? = null  // Mudança para Nullable
     private var marker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,23 +48,51 @@ class CarDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setupMap() {
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        map.uiSettings.isZoomControlsEnabled = true
+        Log.d("CarDetailActivity", "onMapReady - Google Map pronto")
+        mMap = googleMap
+        mMap?.uiSettings?.isZoomControlsEnabled = true
+
         item.value.place?.let {
+            Log.d("CarDetailActivity", "onMapReady - Chamando updateMapLocation com localização inicial")
             updateMapLocation(it)
         }
+
+        // Permitir mover o marcador ao tocar no mapa
+        mMap?.setOnMapClickListener { latLng ->
+            Log.d("CarDetailActivity", "onMapClick - Localização selecionada: $latLng")
+            moveMarker(latLng)
+        }
+    }
+
+    private fun moveMarker(latLng: LatLng) {
+        // Remove o marcador anterior, se existir, e cria um novo
+        marker?.remove()
+        marker = mMap?.addMarker(
+            MarkerOptions()
+                .position(latLng)
+                .title("Localização selecionada")
+        )
+
+        // Move a câmera para a nova posição
+        mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))
+
+        // Atualiza os campos de latitude e longitude com a nova localização
+        binding.etLatitude.setText(latLng.latitude.toString())
+        binding.etLongitude.setText(latLng.longitude.toString())
     }
 
     private fun updateMapLocation(location: ItemLocation) {
         val latLng = LatLng(location.lat, location.long)
-        marker?.remove()
-        marker = map.addMarker(MarkerOptions().position(latLng).title("Localização do carro"))
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        Log.d("CarDetailActivity", "Atualizando localização do marcador para: ${location.lat}, ${location.long}")
+
+        // Move o marcador para a nova posição ao carregar os detalhes do carro
+        moveMarker(latLng)
     }
 
     private fun fetchCarDetails(carId: String) {
@@ -71,11 +100,16 @@ class CarDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             try {
                 item = RetrofitClient.apiService.getItem(carId)
                 withContext(Dispatchers.Main) {
+                    Log.d("CarDetailActivity", "fetchCarDetails - Dados do carro carregados")
                     populateCarDetails(item)
-                    item.value.place?.let { updateMapLocation(it) }
+                    item.value.place?.let {
+                        Log.d("CarDetailActivity", "fetchCarDetails - Chamando updateMapLocation")
+                        updateMapLocation(it)
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
+                    Log.e("CarDetailActivity", "Erro ao carregar os detalhes do carro", e)
                     Toast.makeText(this@CarDetailActivity, "Erro ao carregar os detalhes do carro", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -108,12 +142,16 @@ class CarDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             try {
                 RetrofitClient.apiService.updateItem(item.id, updatedItemValue)
                 withContext(Dispatchers.Main) {
+                    item = item.copy(value = updatedItemValue)
                     Toast.makeText(this@CarDetailActivity, "Carro atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+
+                    // Retorna RESULT_OK e finaliza a atividade
                     setResult(RESULT_OK)
                     finish()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
+                    Log.e("CarDetailActivity", "Erro ao salvar as alterações", e)
                     Toast.makeText(this@CarDetailActivity, "Erro ao salvar as alterações", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -135,6 +173,7 @@ class CarDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
+                            Log.e("CarDetailActivity", "Erro ao deletar o carro", e)
                             Toast.makeText(this@CarDetailActivity, "Erro ao deletar o carro", Toast.LENGTH_SHORT).show()
                         }
                     }

@@ -108,8 +108,7 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_save"
             android:contentDescription="Salvar alterações"
-            app:tint="@android:color/white"
-            app:backgroundTint="@color/gray"
+            app:tint="@color/green"
             android:layout_marginEnd="16dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -118,7 +117,6 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="Deletar carro"
-            app:tint="@android:color/white"
-            app:backgroundTint="@color/gray" />
+            app:tint="@color/red"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

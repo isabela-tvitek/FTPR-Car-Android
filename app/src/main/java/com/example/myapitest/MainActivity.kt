@@ -18,20 +18,33 @@ import com.example.myapitest.service.RetrofitClient
 import com.example.myapitest.ui.ItemAdapter
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.location.Location
+import androidx.core.content.ContextCompat
+import com.google.android.gms.tasks.Task
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var newCarLauncher: ActivityResultLauncher<Intent>
     private lateinit var carDetailLauncher: ActivityResultLauncher<Intent>
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        requestLocationPermission()
+
 
         setupRecyclerView()
         fetchItems()
@@ -62,6 +75,52 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestLocationPermission() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                getLastLocation()
+            } else {
+                Toast.makeText(this, "Permissão de localização negada", Toast.LENGTH_SHORT).show()
+            }
+        }
+        checkLocationPermissionAndRequest()
+    }
+
+    private fun checkLocationPermissionAndRequest() {
+        when {
+            checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED -> {
+                getLastLocation()
+            }
+            shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) -> {
+                locationPermissionLauncher.launch(ACCESS_FINE_LOCATION)
+            }
+            shouldShowRequestPermissionRationale(ACCESS_COARSE_LOCATION) -> {
+                locationPermissionLauncher.launch(ACCESS_COARSE_LOCATION)
+            }
+            else -> {
+                locationPermissionLauncher.launch(ACCESS_FINE_LOCATION)
+            }
+        }
+    }
+
+    private fun getLastLocation() {
+        if (checkSelfPermission(this, ACCESS_FINE_LOCATION) != PERMISSION_GRANTED ||
+            checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+            requestLocationPermission()
+            return
+        }
+        fusedLocationClient.lastLocation.addOnCompleteListener { task: Task<Location> ->
+            if (task.isSuccessful && task.result != null) {
+                val location = task.result
+                val itemLocation = ItemLocation(lat = location.latitude, long = location.longitude)
+                Log.d("HELLO_WORLD", "Lat: ${itemLocation.lat} Long: ${itemLocation.long}")
+            } else {
+                Toast.makeText(this, "Erro não encontrado", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     private fun fetchItems() {
         lifecycleScope.launch {
             try {
