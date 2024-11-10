@@ -1,202 +1,208 @@
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/tvCarNameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/nome_do_carro"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextContrastCheck" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-    <EditText
-        android:id="@+id/etCarName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/nome_do_carro"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCarNameLabel"
-        tools:ignore="Autofill,DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
-
-    <TextView
-        android:id="@+id/tvCarYearLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:importantForAutofill="no"
-        android:text="@string/ano_do_carro"
-        android:textColor="#455A64"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etCarName" />
-
-    <EditText
-        android:id="@+id/etCarYear"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/ano_do_carro"
-        android:importantForAutofill="no"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCarYearLabel"
-        tools:ignore="DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
-
-    <TextView
-        android:id="@+id/tvCarLicenseLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/placa"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etCarYear"
-        tools:ignore="TextContrastCheck,TextViewEdits" />
-
-    <EditText
-        android:id="@+id/etCarLicense"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:hint="@string/placa"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCarLicenseLabel"
-        tools:ignore="DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
-
-    <TextView
-        android:id="@+id/tvCarImageUrlLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/url_da_imagem"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etCarLicense"
-        tools:ignore="TextContrastCheck" />
-
-    <LinearLayout
-        android:id="@+id/urlContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/tvCarImageUrlLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <EditText
-            android:id="@+id/etCarImageUrl"
-            android:layout_width="208dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autofillHints=""
-            android:hint="@string/url_da_imagem"
-            android:minHeight="48dp"
-            tools:ignore="DuplicateSpeakableTextCheck,InefficientWeight,TextFields,VisualLintTextFieldSize" />
-
-        <ImageButton
-            android:id="@+id/btnTakePicture"
+        <TextView
+            android:id="@+id/tvCarNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/capturar_imagem"
-            android:padding="8dp"
-            android:src="@android:drawable/ic_menu_camera"
-            tools:ignore="ImageContrastCheck" />
-    </LinearLayout>
+            android:text="@string/nome_do_carro"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextContrastCheck" />
 
-    <ImageView
-        android:id="@+id/ivCapturedImage"
-        android:layout_width="66dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="276dp"
-        android:layout_marginTop="4dp"
-        android:contentDescription="@string/imagem_capturada"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/urlContainer" />
+        <EditText
+            android:id="@+id/etCarName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/nome_do_carro"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCarNameLabel"
+            tools:ignore="Autofill,DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
 
-    <TextView
-        android:id="@+id/tvLatitudeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:importantForAutofill="no"
-        android:text="@string/latitude"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivCapturedImage"
-        tools:ignore="TextContrastCheck,TextViewEdits" />
+        <TextView
+            android:id="@+id/tvCarYearLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:importantForAutofill="no"
+            android:text="@string/ano_do_carro"
+            android:textColor="#455A64"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etCarName" />
 
-    <EditText
-        android:id="@+id/etLatitude"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/latitude"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLatitudeLabel"
-        tools:ignore="Autofill,DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
+        <EditText
+            android:id="@+id/etCarYear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/ano_do_carro"
+            android:importantForAutofill="no"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCarYearLabel"
+            tools:ignore="DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
 
-    <TextView
-        android:id="@+id/tvLongitudeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:importantForAutofill="no"
-        android:text="@string/longitude"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etLatitude"
-        tools:ignore="TextContrastCheck" />
+        <TextView
+            android:id="@+id/tvCarLicenseLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/placa"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etCarYear"
+            tools:ignore="TextContrastCheck,TextViewEdits" />
 
-    <EditText
-        android:id="@+id/etLongitude"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/longitude"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLongitudeLabel"
-        tools:ignore="Autofill,DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
+        <EditText
+            android:id="@+id/etCarLicense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/placa"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCarLicenseLabel"
+            tools:ignore="DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/etLongitude"
-        app:layout_constraintBottom_toTopOf="@id/buttonContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        tools:ignore="FragmentTagUsage" />
+        <TextView
+            android:id="@+id/tvCarImageUrlLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/url_da_imagem"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etCarLicense"
+            tools:ignore="TextContrastCheck" />
 
-    <LinearLayout
-        android:id="@+id/buttonContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout
+            android:id="@+id/urlContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/tvCarImageUrlLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnSaveCar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@null"
-            android:contentDescription="@string/salvar_alteracoes"
-            android:src="@android:drawable/ic_menu_save"
-            app:tint="@color/green"
-            tools:ignore="ImageContrastCheck" />
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <EditText
+                android:id="@+id/etCarImageUrl"
+                android:layout_width="208dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:autofillHints=""
+                android:hint="@string/url_da_imagem"
+                android:minHeight="48dp"
+                tools:ignore="DuplicateSpeakableTextCheck,InefficientWeight,TextFields,VisualLintTextFieldSize" />
+
+            <ImageButton
+                android:id="@+id/btnTakePicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/capturar_imagem"
+                android:padding="8dp"
+                android:src="@android:drawable/ic_menu_camera"
+                tools:ignore="ImageContrastCheck" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivCapturedImage"
+            android:layout_width="66dp"
+            android:layout_height="57dp"
+            android:layout_marginStart="276dp"
+            android:layout_marginTop="4dp"
+            android:contentDescription="@string/imagem_capturada"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/urlContainer" />
+
+        <TextView
+            android:id="@+id/tvLatitudeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:importantForAutofill="no"
+            android:text="@string/latitude"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivCapturedImage"
+            tools:ignore="TextContrastCheck,TextViewEdits" />
+
+        <EditText
+            android:id="@+id/etLatitude"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/latitude"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLatitudeLabel"
+            tools:ignore="Autofill,DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
+
+        <TextView
+            android:id="@+id/tvLongitudeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:importantForAutofill="no"
+            android:text="@string/longitude"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etLatitude"
+            tools:ignore="TextContrastCheck" />
+
+        <EditText
+            android:id="@+id/etLongitude"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/longitude"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLongitudeLabel"
+            tools:ignore="Autofill,DuplicateSpeakableTextCheck,TextFields,VisualLintTextFieldSize" />
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="366dp"
+            android:layout_height="348dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@id/buttonContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etLongitude"
+            tools:ignore="FragmentTagUsage" />
+
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/btnSaveCar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:contentDescription="@string/salvar_alteracoes"
+                android:src="@android:drawable/ic_menu_save"
+                app:tint="@color/green"
+                tools:ignore="ImageContrastCheck" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

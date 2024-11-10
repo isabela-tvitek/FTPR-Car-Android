@@ -39,4 +39,13 @@
     <string name="erro_deletar_carro">Erro ao deletar o carro</string>
     <string name="erro_carregando_dados">Erro ao buscar dados</string>
     <string name="erro_nao_encontrado">Erro não encontrado</string>
+    <string name="erro_de_verificacao_telefone">Falha no envio do código: Telefone incorreto ou fora do formato válido.</string>
+    <string name="codigo_verificacao_invalido">Código de verificação inválido. Por favor, tente novamente.</string>
+    <string name="usuario_invalido">Usuário inválido ou número de telefone incorreto.</string>
+    <string name="problema_conexao">Erro de conexão. Verifique sua internet e tente novamente.</string>
+    <string name="erro_autenticacao">Erro de autenticação. Por favor, tente novamente.</string>
+    <string name="erro_desconhecido">Erro desconhecido. Entre em contato com o suporte.</string>
+    <string name="numero_telefone_invalido">Número de telefone inválido. Por favor, insira um número válido.</string>
+    <string name="muitos_pedidos">Muitas tentativas de verificação. Tente novamente mais tarde.</string>
+    <string name="erro_verificacao_telefone">Erro ao verificar o número de telefone. Tente novamente.</string>
 </resources>

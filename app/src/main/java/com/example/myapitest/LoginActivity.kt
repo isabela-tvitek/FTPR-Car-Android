@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import java.util.concurrent.TimeUnit
 
@@ -95,11 +96,24 @@ class LoginActivity : AppCompatActivity() {
         if (task.isSuccessful) {
             navigateToMainActivity()
         } else {
-            Toast.makeText(
-                this,
-                "Erro ao fazer login: ${task.exception?.localizedMessage}",
-                Toast.LENGTH_SHORT
-            ).show()
+            val errorMessage = when (val exception = task.exception) {
+                is FirebaseAuthInvalidCredentialsException -> {
+                    getString(R.string.codigo_verificacao_invalido)
+                }
+                is FirebaseAuthInvalidUserException -> {
+                    getString(R.string.usuario_invalido)
+                }
+                is FirebaseAuthWebException -> {
+                    getString(R.string.problema_conexao)
+                }
+                is FirebaseAuthException -> {
+                    exception.localizedMessage ?: getString(R.string.erro_autenticacao)
+                }
+                else -> {
+                    getString(R.string.erro_desconhecido)
+                }
+            }
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -142,11 +156,12 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onVerificationFailed(e: FirebaseException) {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Falha no envio do código: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    val errorMessage = when (e) {
+                        is FirebaseAuthInvalidCredentialsException -> getString(R.string.numero_telefone_invalido)
+                        is FirebaseTooManyRequestsException -> getString(R.string.muitos_pedidos)
+                        else -> getString(R.string.erro_verificacao_telefone)
+                    }
+                    Toast.makeText(this@LoginActivity, errorMessage, Toast.LENGTH_LONG).show()
                 }
 
                 override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
