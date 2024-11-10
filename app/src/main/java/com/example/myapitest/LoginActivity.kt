@@ -3,7 +3,6 @@ package com.example.myapitest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -44,10 +43,12 @@ class LoginActivity : AppCompatActivity() {
 
             setupGoogleLogin()
             setupView()
-
         } catch (e: Exception) {
-            Log.e("LoginActivity", "Erro no onCreate", e)
-            Toast.makeText(this, "Erro ao iniciar: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "Erro ao iniciar: ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -59,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupGoogleLogin() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("37165123431-uec0e2t83s88k9vk88cbumm951lvtl79.apps.googleusercontent.com")
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
@@ -78,8 +79,7 @@ class LoginActivity : AppCompatActivity() {
                 firebaseAuthWithGoogle(idToken)
             }
         } catch (e: ApiException) {
-            Log.e("LoginActivity", "Google sign in failed", e)
-            Toast.makeText(this, "Falha no login com Google", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.google_sign_in_failed, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -87,16 +87,19 @@ class LoginActivity : AppCompatActivity() {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
-                onCredentialCompleteListener(task, "Google")
+                onCredentialCompleteListener(task, R.string.google.toString())
             }
     }
 
     private fun onCredentialCompleteListener(task: Task<AuthResult>, loginType: String) {
         if (task.isSuccessful) {
-            Log.d("LoginActivity", "$loginType login bem-sucedido: ${auth.currentUser?.uid}")
             navigateToMainActivity()
         } else {
-            Toast.makeText(this, "Erro ao fazer login: ${task.exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Erro ao fazer login: ${task.exception?.localizedMessage}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -117,7 +120,11 @@ class LoginActivity : AppCompatActivity() {
     private fun sendVerificationCode() {
         val phoneNumber = binding.cellphone.text.toString()
         if (phoneNumber.isEmpty()) {
-            Toast.makeText(this, "Por favor, insira um número de telefone válido", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                R.string.numero_telefone_valido,
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -130,17 +137,25 @@ class LoginActivity : AppCompatActivity() {
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                     auth.signInWithCredential(credential)
                         .addOnCompleteListener { task ->
-                            onCredentialCompleteListener(task, "Phone Number")
+                            onCredentialCompleteListener(task, R.string.telefone.toString())
                         }
                 }
 
                 override fun onVerificationFailed(e: FirebaseException) {
-                    Toast.makeText(this@LoginActivity, "Falha no envio do código: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Falha no envio do código: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
 
                 override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
                     this@LoginActivity.verificationId = verificationId
-                    Toast.makeText(this@LoginActivity, "Código de verificação enviado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@LoginActivity,
+                        R.string.codigo_enviado,
+                        Toast.LENGTH_SHORT
+                    ).show()
                     binding.btnVerifySms.visibility = View.VISIBLE
                     binding.veryfyCode.visibility = View.VISIBLE
                 }
@@ -152,13 +167,17 @@ class LoginActivity : AppCompatActivity() {
     private fun verifyCode() {
         val verificationCode = binding.veryfyCode.text.toString()
         if (verificationCode.isEmpty()) {
-            Toast.makeText(this, "Por favor, insira o código de verificação", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                R.string.insira_o_codigo_de_verificacao,
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
         val credential = PhoneAuthProvider.getCredential(verificationId, verificationCode)
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
-                onCredentialCompleteListener(task, "Phone Number")
+                onCredentialCompleteListener(task, R.string.telefone.toString())
             }
     }
 

@@ -1,37 +1,80 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/ivCarImage"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/imagem_do_carro"
+        android:scaleType="centerInside"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/carrodefault" />
+
+    <TextView
+        android:id="@+id/tvCarNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nome_do_carro"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivCarImage"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/etCarName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Nome do carro"
-        app:layout_constraintTop_toTopOf="parent"
+        android:importantForAutofill="no"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tvCarNameLabel"
+        tools:ignore="LabelFor,TextFields,VisualLintTextFieldSize,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/tvCarYearLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ano_do_carro"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etCarName"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/etCarYear"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Ano do carro"
-        app:layout_constraintTop_toBottomOf="@id/etCarName"
-        app:layout_constraintStart_toStartOf="parent"
+        android:importantForAutofill="no"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCarYearLabel"
+        tools:ignore="LabelFor,TextFields,VisualLintTextFieldSize,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/tvCarLicenseLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etCarYear"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/etCarLicense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Placa"
-        app:layout_constraintTop_toBottomOf="@id/etCarYear"
-        app:layout_constraintStart_toStartOf="parent"
+        android:importantForAutofill="no"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCarLicenseLabel"
+        tools:ignore="LabelFor,TextFields,VisualLintTextFieldSize,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <LinearLayout
         android:id="@+id/urlContainer"
@@ -48,37 +91,60 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="URL da imagem" />
+            android:hint="@string/url_da_imagem"
+            android:importantForAutofill="no"
+            tools:ignore="TextFields,VisualLintTextFieldSize,TouchTargetSizeCheck" />
 
         <ImageButton
             android:id="@+id/btnTakePicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_camera"
-            android:contentDescription="Capturar Imagem"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp" />
+            android:contentDescription="@string/capturar_imagem"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_camera"
+            tools:ignore="ImageContrastCheck" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvLatitudeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/latitude"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/urlContainer"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/etLatitude"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Latitude"
-        app:layout_constraintTop_toBottomOf="@id/urlContainer"
-        app:layout_constraintStart_toStartOf="parent"
+        android:importantForAutofill="no"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLatitudeLabel"
+        tools:ignore="TextFields,VisualLintTextFieldSize,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/tvLongitudeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/longitude"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etLatitude"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/etLongitude"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Longitude"
-        app:layout_constraintTop_toBottomOf="@id/etLatitude"
-        app:layout_constraintStart_toStartOf="parent"
+        android:importantForAutofill="no"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLongitudeLabel"
+        tools:ignore="TextFields,VisualLintTextFieldSize,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <fragment
         android:id="@+id/map"
@@ -90,7 +156,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        tools:ignore="FragmentTagUsage" />
 
     <LinearLayout
         android:id="@+id/buttonContainer"
@@ -102,21 +169,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnSaveChanges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@string/salvar_alteracoes"
             android:src="@android:drawable/ic_menu_save"
-            android:contentDescription="Salvar alterações"
-            app:tint="@color/green"
-            android:layout_marginEnd="16dp" />
+            android:tint="@color/green"
+            tools:ignore="ImageContrastCheck" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnDeleteCar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:background="@null"
+            android:contentDescription="@string/deletar_carro"
             android:src="@android:drawable/ic_menu_delete"
-            android:contentDescription="Deletar carro"
-            app:tint="@color/red"/>
+            android:tint="@color/red"
+            tools:ignore="ImageContrastCheck" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

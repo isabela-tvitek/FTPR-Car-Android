@@ -3,7 +3,6 @@ package com.example.myapitest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -45,10 +44,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         requestLocationPermission()
 
-
         setupRecyclerView()
         fetchItems()
-
 
         newCarLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -81,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             if (isGranted) {
                 getLastLocation()
             } else {
-                Toast.makeText(this, "Permissão de localização negada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.location_permission_denied, Toast.LENGTH_SHORT).show()
             }
         }
         checkLocationPermissionAndRequest()
@@ -90,7 +87,10 @@ class MainActivity : AppCompatActivity() {
     private fun checkLocationPermissionAndRequest() {
         when {
             checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED -> {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        ACCESS_COARSE_LOCATION
+                    ) == PERMISSION_GRANTED -> {
                 getLastLocation()
             }
             shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) -> {
@@ -115,9 +115,8 @@ class MainActivity : AppCompatActivity() {
             if (task.isSuccessful && task.result != null) {
                 val location = task.result
                 val itemLocation = ItemLocation(lat = location.latitude, long = location.longitude)
-                Log.d("HELLO_WORLD", "Lat: ${itemLocation.lat} Long: ${itemLocation.long}")
             } else {
-                Toast.makeText(this, "Erro não encontrado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.erro_nao_encontrado, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -149,13 +148,13 @@ class MainActivity : AppCompatActivity() {
                         value = itemValue
                     )
                 }
-
                 updateRecyclerView(items)
-                Log.d("MainActivity", "Itens recebidos: $items")
-
             } catch (e: Exception) {
-                Log.e("MainActivity", "Erro ao buscar itens", e)
-                Toast.makeText(this@MainActivity, "Erro ao buscar dados", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    R.string.erro_carregando_dados,
+                    Toast.LENGTH_SHORT
+                ).show()
             } finally {
                 binding.swipeRefreshLayout.isRefreshing = false
             }
@@ -166,6 +165,7 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_logout -> {

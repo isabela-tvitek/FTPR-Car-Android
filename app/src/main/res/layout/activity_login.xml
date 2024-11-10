@@ -12,49 +12,43 @@
             android:id="@+id/googleSignInButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="244dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="229dp"
-            android:layout_height="261dp"
-            android:importantForAccessibility="no"
-            android:src="@mipmap/ic_launcher_foreground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.07" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/cellphone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Número de Telefone"
+            android:layout_marginTop="24dp"
+            android:hint="@string/enter_phone_number"
+            android:importantForAutofill="no"
             android:inputType="phone"
-            app:layout_constraintTop_toBottomOf="@id/googleSignInButton"
-            app:layout_constraintStart_toStartOf="parent"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/googleSignInButton"
+            tools:ignore="VisualLintTextFieldSize" />
 
         <Button
             android:id="@+id/btnSendSms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Enviar Código"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"
+            android:text="@string/send_code"
+            app:layout_constraintEnd_toEndOf="@+id/cellphone"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cellphone" />
 
         <EditText
             android:id="@+id/veryfyCode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Código de Verificação"
+            android:hint="@string/verify_code"
+            android:importantForAutofill="no"
             android:inputType="number"
             app:layout_constraintTop_toBottomOf="@id/btnSendSms"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,10 +60,12 @@
             android:id="@+id/btnVerifySms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Verificar Código"
+            android:text="@string/verify_code"
             app:layout_constraintTop_toBottomOf="@id/veryfyCode"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp"
             android:visibility="gone" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

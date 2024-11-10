@@ -12,6 +12,7 @@
         android:id="@+id/image"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:importantForAccessibility="no"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
@@ -21,9 +22,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="TextContrastCheck"
         tools:text="Honda Civic" />
 
     <TextView
@@ -31,9 +33,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toBottomOf="@id/model"
-        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="TextContrastCheck"
         tools:text="2019/2019" />
 
     <TextView
@@ -41,8 +44,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toBottomOf="@id/year"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="ABC-1234"/>
+        tools:ignore="TextContrastCheck"
+        tools:text="ABC-1234" />
 </androidx.constraintlayout.widget.ConstraintLayout>

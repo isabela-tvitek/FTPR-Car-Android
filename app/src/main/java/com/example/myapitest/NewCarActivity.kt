@@ -1,21 +1,22 @@
 package com.example.myapitest
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.example.myapitest.databinding.ActivityNewCarBinding
 import com.example.myapitest.model.ItemLocation
@@ -42,18 +43,17 @@ import java.util.UUID
 class NewCarActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityNewCarBinding
-    private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var map: GoogleMap
     private var marker: Marker? = null
 
-    private lateinit var imageUri: Uri
+    private var imageUri: Uri? = null
     private var imageFile: File? = null
-
     private val cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            binding.etCarImageUrl.setText("Imagem capturada")
+            displayCapturedImage()
         }
     }
 
@@ -61,15 +61,12 @@ class NewCarActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityNewCarBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
         setupMap()
-        setupView()
-    }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        initializeMap()
+        binding.btnTakePicture.setOnClickListener { takePicture() }
+        binding.btnSaveCar.setOnClickListener { saveCar() }
     }
 
     private fun setupMap() {
@@ -77,27 +74,21 @@ class NewCarActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment?.getMapAsync(this)
     }
 
-    private fun initializeMap() {
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
         map.uiSettings.isZoomControlsEnabled = true
         getDeviceLocation()
 
         map.setOnMapClickListener { latLng ->
-            marker?.remove()
-            marker = map.addMarker(MarkerOptions().position(latLng).title("Localização selecionada"))
+            moveMarker(latLng)
         }
     }
 
     private fun getDeviceLocation() {
-        if (checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-            loadCurrentLocation()
-        } else {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-        }
-    }
-
-    private fun loadCurrentLocation() {
-        if (checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-            map.isMyLocationEnabled = true
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PERMISSION_GRANTED) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 location?.let {
                     val currentLocation = LatLng(it.latitude, it.longitude)
@@ -105,55 +96,60 @@ class NewCarActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         } else {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 100)
         }
+    }
+
+    private fun moveMarker(latLng: LatLng) {
+        marker?.remove()
+        marker = map.addMarker(MarkerOptions().position(latLng).title(R.string.localizacao_selecionada.toString()))
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))
+        binding.etLatitude.setText(latLng.latitude.toString())
+        binding.etLongitude.setText(latLng.longitude.toString())
     }
 
     private fun takePicture() {
-        if (checkSelfPermission(this, Manifest.permission.CAMERA) == PERMISSION_GRANTED) {
-            openCamera()
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+        ) == PERMISSION_GRANTED) {
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            imageUri = createImageUri()
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+            cameraLauncher.launch(intent)
         } else {
-            requestPermissions(arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+            requestPermissions(arrayOf(Manifest.permission.CAMERA), 101)
         }
     }
 
-    private fun setupView() {
-        binding.btnSaveCar.setOnClickListener { saveCar() }
-        binding.btnTakePicture.setOnClickListener { takePicture() }
-    }
-
-    private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        imageUri = createImageUri()
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-        cameraLauncher.launch(intent)
-    }
-
+    @SuppressLint("SimpleDateFormat")
     private fun createImageUri(): Uri {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageFileName = "JPEG_${timeStamp}_"
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         imageFile = File.createTempFile(imageFileName, ".jpg", storageDir)
-        return FileProvider.getUriForFile(this, "${applicationContext.packageName}.fileprovider", imageFile!!)
+        return FileProvider.getUriForFile(
+            this,
+            "${applicationContext.packageName}.fileprovider", imageFile!!
+        )
+    }
+
+    private fun displayCapturedImage() {
+        imageFile?.let {
+            val bitmap = BitmapFactory.decodeFile(it.absolutePath)
+            binding.ivCapturedImage.setImageBitmap(bitmap)
+            binding.etCarImageUrl.setText(R.string.imagem_capturada)
+        }
     }
 
     private fun saveCar() {
         val name = binding.etCarName.text.toString()
         val year = binding.etCarYear.text.toString()
         val licence = binding.etCarLicense.text.toString()
-        val imageUrlInput = binding.etCarImageUrl.text.toString()
+        val imageUrl = imageUri?.toString() ?: binding.etCarImageUrl.text.toString()
 
         if (name.isEmpty() || year.isEmpty() || licence.isEmpty() || marker == null) {
-            showToast("Preencha todos os campos e selecione uma localização")
-            return
-        }
-
-        val imageUrl = if (imageUrlInput.isNotEmpty()) {
-            imageUrlInput
-        } else if (::imageUri.isInitialized) {
-            imageUri.toString()
-        } else {
-            showToast("Por favor, capture uma imagem ou forneça uma URL da imagem")
+            showToast(R.string.preencha_todos_campos.toString())
             return
         }
 
@@ -172,13 +168,12 @@ class NewCarActivity : AppCompatActivity(), OnMapReadyCallback {
                 RetrofitClient.apiService.addItem(newItemValue)
                 withContext(Dispatchers.Main) {
                     setResult(Activity.RESULT_OK)
-                    showToast("Carro adicionado com sucesso!")
+                    showToast(R.string.carro_adicionado_sucesso.toString())
                     finish()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    showToast("Erro ao salvar o carro")
-                    Log.e("NewCarActivity", "Erro: ${e.message}", e)
+                    showToast(R.string.erro_salvar_carro.toString())
                 }
             }
         }
@@ -189,9 +184,6 @@ class NewCarActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 100
-        private const val CAMERA_PERMISSION_REQUEST_CODE = 101
-
         fun newIntent(context: Context) = Intent(context, NewCarActivity::class.java)
     }
 }
